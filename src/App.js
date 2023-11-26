@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import SearchBar from "./components/searchBar";
+import WeatherList from "./components/weatherList"; 
+import { useState } from "react";
+import getWeatherInfo from "./api";
 
 function App() {
+  
+  const [weather , setWeather] = useState(''); 
+  
+  const onSubmit = async (city) => {
+    try {
+      const weatherResp = await getWeatherInfo(city);
+      setWeather(weatherResp);
+    } catch (error) {
+      console.error("Error fetching weather data:", error.message);
+      setWeather('');
+    }
+  };
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" >
+      <SearchBar onSubmit = {onSubmit} /> 
+      <WeatherList weather = {weather}  />
     </div>
   );
 }
